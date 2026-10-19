@@ -4,11 +4,14 @@ import numpy as np
 
 def wilson(k, n, z=1.96):
     """Wilson score interval for a proportion k/n (95 % by default). Returns (low, high)."""
-    # TODO (Bước 4): hãy tự cài hàm này. Gợi ý:
-    #   Khoảng tin cậy Wilson. p = k/n; d = 1 + z^2/n; tâm = (p + z^2/(2n)) / d; nửa rộng = z *
-    #   sqrt(p(1-p)/n + z^2/(4n^2)) / d. Trả (tâm - nửa rộng, tâm + nửa rộng) cắt trong [0, 1]. Nếu n = 0
-    #   trả (nan, nan).
-    raise NotImplementedError("TODO wilson: xem GUIDE.md, Bước 4")
+    if n == 0:
+        return (float("nan"), float("nan"))
+    p, d = k / n, 1 + z ** 2 / n
+    center = (p + z ** 2 / (2 * n)) / d
+    half = z * np.sqrt(p * (1 - p) / n + z ** 2 / (4 * n ** 2)) / d
+    lo = 0.0 if k == 0 else max(0.0, center - half)
+    hi = 1.0 if k == n else min(1.0, center + half)
+    return (float(lo), float(hi))
 
 
 def rate(flags):
